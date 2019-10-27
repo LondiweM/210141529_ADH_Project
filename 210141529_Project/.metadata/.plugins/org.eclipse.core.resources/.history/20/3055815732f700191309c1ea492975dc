@@ -1,0 +1,84 @@
+package controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+
+import entities.TwitterEntity;
+import model.Twitter;
+import service.TwitterEJB;
+
+import twitter4j.Status;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
+
+
+@ManagedBean(name="twittercontroller")
+@SessionScoped
+public class TwitterController {
+	private final static String CONSUMER_KEY = "";
+    private final static String CONSUMER_KEY_SECRET = "";
+    private final static String ACCESS_TOKEN = "";
+    private final static String ACCESS_TOKEN_SECRET = "";
+	
+	@EJB
+	TwitterEJB twitterservices;
+	
+	@ManagedProperty(value="#{twitter}")
+	private Twitter twitter;
+	
+	public String addNewTwitter()
+	{
+		System.out.println("Sharon Lets see");
+		twitterservices.AddNew(twitter.getEntity());
+		return "ViewList.xhtml";
+	}
+	
+	
+	private List<TwitterEntity> twitterlist = new ArrayList<>();
+	
+	 public List<TwitterEntity> GetList() {
+	    	twitterlist = twitterservices.findTwitts();
+	        return twitterlist;
+	    }
+	
+	public Twitter getTweet() {
+		return twitter;
+	}
+
+	public void setTweet(Twitter twitter) {
+		this.twitter = twitter;
+	}
+	public static Twitter getTwitterinstance() {
+		/**
+		 * if not using properties file, we can set access token by following way
+		 */
+		
+		ConfigurationBuilder kk = new ConfigurationBuilder();
+	    cb.setDebugEnabled(true)
+	      .setOAuthConsumerKey(CONSUMER_KEY)
+	      .setOAuthConsumerSecret(CONSUMER_KEY_SECRET)
+	      .setOAuthAccessToken(ACCESS_TOKEN)
+	      .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
+	    TwitterFactory ls = new TwitterFactory(kk.build());
+	    Twitter tweet =ls.getInstance();
+	    System.out.println("Hi Sharon" + tweet);
+		return tweet;
+		
+	}
+	
+	public String createTweet() throws TwitterException {
+	    Twitter twitter = getTwitterinstance();
+	    System.out.println(twitter);
+	    Status status = twitter.updateStatus(twitter.getEntity().getTweetBody());
+	    System.out.println(status.getText());
+	    twitterservices.AddNew(twitter.getEntity());
+	    return status.getText();
+	}
+
+}

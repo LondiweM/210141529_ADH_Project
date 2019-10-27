@@ -1,0 +1,45 @@
+package entities;
+
+import java.sql.Time;
+import java.util.Date;
+
+import javax.annotation.Generated;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+
+
+@Entity(name="twitter_table")
+public class TwitterEntity {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@Generated(GenerationTime.ALWAYS)
+	@Temporal(javax.persistence.TemporalType.DATE)
+	private long id;
+	private String TweetBody;
+	private Date Timestamp = new java.sql.Date(new java.util.Date().getTime());
+	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	public Date getTimestamp() {
+		
+		return Timestamp;
+	}
+	public void setTimestamp(Date timestamp2) {
+		Timestamp = timestamp2;
+	}
+	public String getTweetBody() {
+		return TweetBody;
+	}
+	public void setTweetBody(String tweetBody) {
+		TweetBody = tweetBody;
+	}
+	
+}
